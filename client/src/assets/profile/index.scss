@@ -1,0 +1,26 @@
+.profile-wrapper {
+  .avatar {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    img {
+      max-height: 100px;
+    }
+  }
+
+  .profile-info {
+    justify-content: center;
+    align-items: center;
+
+    .account {
+      padding-top: 20px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .active-account {
+      color: #eecd3d;
+    }
+  }
+}

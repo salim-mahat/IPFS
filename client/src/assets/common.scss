@@ -1,0 +1,99 @@
+.circle {
+  background-color: transparent;
+  color: gray;
+  border-radius: 50%;
+  border: 10px solid #ffe056;
+  height: 100%;
+  width: auto;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.center-x {
+  justify-content: center;
+  margin: auto auto;
+}
+
+.center-y {
+  align-items: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+$margins: "1" 1em, "2" 2em, "3" 3em, "4" 4em, "5" 5em, "6" 6em;
+
+@each $i in $margins {
+  .m-#{nth($i, 1)} {
+    margin: nth($i, 2) !important;
+  }
+  .mx-#{nth($i, 1)} {
+    margin-right: nth($i, 2) !important;
+    margin-left: nth($i, 2) !important;
+  }
+  .my-#{nth($i, 1)} {
+    margin-top: nth($i, 2) !important;
+    margin-bottom: nth($i, 2) !important;
+  }
+  .mb-#{nth($i, 1)} {
+    margin-bottom: nth($i, 2) !important;
+  }
+  .mt-#{nth($i, 1)} {
+    margin-top: nth($i, 2) !important;
+  }
+  .mr-#{nth($i, 1)} {
+    margin-right: nth($i, 2) !important;
+  }
+  .ml-#{nth($i, 1)} {
+    margin-left: nth($i, 2) !important;
+  }
+  .p-#{nth($i, 1)} {
+    padding: nth($i, 2) !important;
+  }
+  .px-#{nth($i, 1)} {
+    padding-right: nth($i, 2) !important;
+    padding-left: nth($i, 2) !important;
+  }
+  .py-#{nth($i, 1)} {
+    padding-top: nth($i, 2) !important;
+    padding-bottom: nth($i, 2) !important;
+  }
+  .pb-#{nth($i, 1)} {
+    padding-bottom: nth($i, 2) !important;
+  }
+  .pt-#{nth($i, 1)} {
+    padding-top: nth($i, 2) !important;
+  }
+  .pr-#{nth($i, 1)} {
+    padding-right: nth($i, 2) !important;
+  }
+  .pl-#{nth($i, 1)} {
+    padding-left: nth($i, 2) !important;
+  }
+}

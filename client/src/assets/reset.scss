@@ -1,0 +1,24 @@
+html,
+body,
+div {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root,
+.layout,
+.body-wrapper {
+  background-color: #f2f4f7;
+  min-height: calc(100vh - 80px);
+}
+
+.no-border {
+  border: none !important;
+}
+
+a {
+  color: inherit !important;
+  text-decoration: none !important;
+}

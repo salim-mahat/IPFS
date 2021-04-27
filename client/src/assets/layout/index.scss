@@ -1,0 +1,27 @@
+.layout {
+  margin: 0;
+  padding: 0;
+}
+
+.body-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-wrapper {
+  flex: 0.25;
+  background-color: #fff;
+  padding-top: 100px;
+  min-height: 100%;
+
+  .sticky {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 10px;
+  }
+}
+
+.home-wrapper {
+  background-color: #f2f4f7;
+  flex: 1;
+}

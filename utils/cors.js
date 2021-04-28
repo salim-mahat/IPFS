@@ -9,7 +9,7 @@ var whitelist = [
 
 var corsOptions = {
   origin: function (origin, callback) {
-    // if (!origin) return callback(new Error("Invalid Value for request origin"));
+    if (!origin) return callback(new Error("Invalid Value for request origin"));
 
     const cleanedOrigin =
       origin[origin.length - 1] === "/"

@@ -40,18 +40,8 @@ var whitelist = [
 var corsOptions = {
   origin: function (origin, callback) {
     
-    if (!origin) return callback(null, true);
+    return callback(null, true);
 
-    const cleanedOrigin =
-      origin[origin.length - 1] === "/"
-        ? origin.substring(0, origin.length - 1)
-        : origin;
-
-    if (whitelist.includes(cleanedOrigin)) {
-      callback(null, true);
-      return;
-    }
-    callback(new Error("Not allowed by CORS"));
   },
 };
 

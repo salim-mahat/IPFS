@@ -1,0 +1,28 @@
+.card-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.card-wrapper > * {
+  min-width: 300px;
+}
+
+.box-btn {
+  border: none;
+  background-color: #ffe056;
+  -webkit-box-shadow: 1px 1px 4px 0px dimgray;
+          box-shadow: 1px 1px 4px 0px dimgray;
+  font-weight: 500;
+  color: #1d1d1d;
+}
+
+.box-btn:hover {
+  background-color: #e4c127;
+}
+/*# sourceMappingURL=index.css.map */

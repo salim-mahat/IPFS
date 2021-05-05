@@ -1,0 +1,35 @@
+.profile-wrapper .avatar {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.profile-wrapper .avatar img {
+  max-height: 100px;
+}
+
+.profile-wrapper .profile-info {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.profile-wrapper .profile-info .account {
+  padding-top: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.profile-wrapper .profile-info .active-account {
+  color: #eecd3d;
+}
+/*# sourceMappingURL=index.css.map */

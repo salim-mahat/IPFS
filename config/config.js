@@ -4,8 +4,8 @@ const config = {
     DATABASE: process.env.MONGODB_URI,
   },
   default: {
-    SECRET: "mysecretkey",
-    DATABASE: "mongodb+srv://new:new123@cluster0-yikn7.mongodb.net/ipfs?retryWrites=true&w=majority",
+    SECRET: process.env.JWT_SECRET,
+    DATABASE: process.env.MONGODB_URI,
   },
 };
 

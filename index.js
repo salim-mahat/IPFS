@@ -22,6 +22,19 @@ app.use(corsMiddleware);
 app.use("/", express.static(path.join("client", "build")));
 
 app.use("/api", require("./routes"));
+
+
+
+
+// my code
+
+app.use('/',require('./routes/assetRoutes'))
+
+
+
+
+
+
 app.use((req, res, next) => {
   // If we got here no other route matched the path so we
   // hit a 404.

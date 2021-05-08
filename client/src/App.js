@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Redirect,
@@ -15,12 +15,16 @@ import Navigation from "./components/Navigation";
 import APIResponseHandler from "./components/APIResponseHandler";
 import routes from "./routes";
 
+
 function App() {
   const userData = useSelector((s) => s.userData);
 
   const authenticRoutes = routes.filter((route) => !route.open);
   const openRoutes = routes.filter((route) => route.open);
   const currentRoutes = userData.isLoggedIn ? authenticRoutes : openRoutes;
+
+
+  
 
   return (
     <Router>

@@ -1,6 +1,5 @@
 //// bhushan code
 
-
 // const express = require("express");
 // const router = express.Router();
 
@@ -79,11 +78,6 @@
 
 // module.exports = router;
 
-
-
-
-
-
 // //ipfs added
 // const express = require("express");
 // const router = express.Router();
@@ -94,7 +88,6 @@
 // const upload = require("../../utils/multer");
 // const assetIdAPI = require("./id");
 // const upload_file = require("../../utils/ipfs");
-
 
 // router.use(auth);
 
@@ -165,10 +158,6 @@
 
 // module.exports = router;
 
-
-
-
-
 // //22 ipfs added
 // const express = require("express");
 // const router = express.Router();
@@ -179,7 +168,6 @@
 // const assetIdAPI = require("./id");
 // const upload_file = require("../../utils/ipfs");
 
-
 // router.use(auth);
 
 // const requiredFields = ["name", "description", "externalURL"];
@@ -187,7 +175,7 @@
 
 // router.post("/", upload_file, (req, res, next) => {
 
-//   const fields = res.locals.fields 
+//   const fields = res.locals.fields
 
 //   const errorFields = [];
 //   let assetData = requiredFields.reduce((acc, val) => {
@@ -206,7 +194,7 @@
 
 //   assetData.UserId = req.user.id;
 //   assetData.assetLink = fields.hash;
-  
+
 //   Asset.create(assetData)
 //     .then((doc) => {
 //       if (!doc) {
@@ -221,9 +209,6 @@
 //     })
 //     .catch(next);
 // });
-
-
-
 
 // router.get("/", (req, res, next) => {
 //   const { limit = 10, skip = 0 } = req.query;
@@ -244,13 +229,6 @@
 
 // module.exports = router;
 
-
-
-
-
-
-
-
 //uri routes
 const express = require("express");
 const router = express.Router();
@@ -261,15 +239,13 @@ const { auth } = require("../../middlewares/auth");
 const assetIdAPI = require("./id");
 const upload_file = require("../../utils/ipfs");
 
-
 router.use(auth);
 
 const requiredFields = ["name", "description", "externalURL"];
 // const optionalFields = ["attributes"];
 
 router.post("/", upload_file, (req, res, next) => {
-
-  const fields = res.locals.fields 
+  const fields = res.locals.fields;
 
   const errorFields = [];
   let assetData = requiredFields.reduce((acc, val) => {
@@ -288,7 +264,7 @@ router.post("/", upload_file, (req, res, next) => {
 
   assetData.UserId = req.user.id;
   assetData.assetLink = fields.hash;
-  
+
   Asset.create(assetData)
     .then((doc) => {
       if (!doc) {
@@ -297,15 +273,12 @@ router.post("/", upload_file, (req, res, next) => {
       }
       res.json({
         status: "success",
-        message: "Mint created",
+        message: "Asset Minted",
         mint: doc,
       });
     })
     .catch(next);
 });
-
-
-
 
 router.get("/", (req, res, next) => {
   const { limit = 10, skip = 0 } = req.query;
@@ -324,7 +297,4 @@ router.get("/", (req, res, next) => {
 
 router.use("/:assetId", assetIdAPI);
 
-
-
 module.exports = router;
-

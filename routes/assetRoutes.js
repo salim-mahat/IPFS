@@ -11,6 +11,9 @@ const router = Router();
 
 const {
     getURIstring,
+    GetAssetsByaddress,
+    updateAddressandTokenID,
+    TransferOwnership
     } = require("../controller/assetController");
 
 
@@ -22,8 +25,17 @@ const { auth } = require("../middlewares/auth");
 
 
 //-----------------------------user auth routes-----------------------------------------------
-// user signup
+// get uri 
 router.get("/getURI/:_id", auth, getURIstring);
+
+// update address and tokenid
+router.post("/updateAddressAndTokenID", auth, updateAddressandTokenID);
+
+// get asset data
+router.get("/GetAssetByWalletAddress/:address", auth, GetAssetsByaddress);
+
+// update address and tokenid
+router.post("/TransferOwnership", auth, TransferOwnership);
 
 
 

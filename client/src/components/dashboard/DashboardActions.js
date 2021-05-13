@@ -1,7 +1,10 @@
 import React from "react";
 import { Button, CardContent, Typography } from "@material-ui/core";
 
-export default function DashboardActions({ onButtonClick }) {
+export default function DashboardActions({
+  onButtonClick,
+  onTransferOwnership,
+}) {
   return (
     <CardContent>
       <Typography
@@ -22,7 +25,7 @@ export default function DashboardActions({ onButtonClick }) {
         </Button>
         <Button
           className="my-1 p-3 box-btn"
-          onClick={onButtonClick}
+          onClick={onTransferOwnership}
           name="transaction"
         >
           Transfer Ownership

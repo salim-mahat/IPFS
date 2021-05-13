@@ -4,6 +4,8 @@ const initialState = {
   mints: {},
 };
 
+console.log(initialState);
+
 const mintReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_MINT:

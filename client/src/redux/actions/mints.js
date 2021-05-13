@@ -1,5 +1,4 @@
 import axios from "axios";
-
 export const SET_MINT = "SET_MINT";
 export const SET_MINTS = "SET_MINTS";
 
@@ -25,12 +24,13 @@ export const createMint = (mintData) => (dispatch) => {
     });
 };
 
-export const getMints = () => (dispatch) => {
-  axios.get("/api/asset/").then((res) => {
+export const getMints = (address) => (dispatch) => {
+  console.log("address", address);
+  axios.get(`/GetAssetByWalletAddress/${address}`).then((res) => {
     if (res.data) {
       dispatch({
         type: SET_MINTS,
-        payload: res.data,
+        payload: res.data.message,
       });
     }
   });

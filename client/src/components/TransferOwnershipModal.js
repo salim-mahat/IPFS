@@ -7,6 +7,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { useSelector } from "react-redux";
+import BlockLoader from "./Blockchain/blockloader";
 import axios from "axios";
 const Constants = require("./constant/Constants");
 var apiBaseUrl = Constants.getAPiUrl();
@@ -16,7 +17,7 @@ export default function TransferOwnershipModal({
   token,
 }) {
   const [toAddress, setToAddress] = useState("");
-
+  const [blockloader, setblockloader] = React.useState(false);
   const subscribeLogEvent = (contract, eventName) => {
     const subscribedEvents = {};
     console.log("subscribe event called");
@@ -52,6 +53,7 @@ export default function TransferOwnershipModal({
   const user = useSelector((s) => s.userData.user);
 
   async function transferOwnershipWeb3() {
+    setblockloader(true);
     const account = await getCurrentAccount();
     console.log(user.currentMetaMaskId);
     console.log(token);
@@ -71,6 +73,7 @@ export default function TransferOwnershipModal({
       );
       console.log(transferOwnershipResponse);
       setModalOpen(false);
+      setblockloader(false);
     }
   }
   async function getCurrentAccount() {
@@ -89,6 +92,7 @@ export default function TransferOwnershipModal({
         onClose={() => setModalOpen(false)}
         aria-labelledby="form-dialog-title"
       >
+        {blockloader && <BlockLoader />}
         <DialogTitle id="form-dialog-title">Transfer Asset</DialogTitle>
         <DialogContent>
           <DialogContentText>

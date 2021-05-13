@@ -7,7 +7,8 @@ export function getAPiUrl() {
     return apiBaseUrl;
 }
 
-var imageBaseUrl = "https://ipfsnft.herokuapp.com"
+var imageBaseUrl = "http://67.205.174.98:8080/ipfs/"
+
 
 export function getimageUrl() {
     return imageBaseUrl;

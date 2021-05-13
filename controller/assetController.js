@@ -261,6 +261,7 @@ TransferOwnership: async(req, res, next) => {
     // update dta in from sender
     fromAssetData.address = "";
     fromAssetData.IPFSHash = "";
+    fromAssetData.TokenID = "";
     // fromAssetData.ownershipTransferedTo = To
     await fromAssetData.save();  
 

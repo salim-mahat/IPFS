@@ -7,6 +7,7 @@ import {
   Typography,
   Box,
 } from "@material-ui/core";
+import VideoThumbnail from "react-video-thumbnail";
 import { useDispatch, useSelector } from "react-redux";
 import { Favorite, ShareOutlined, Home } from "@material-ui/icons";
 import MintCard from "../../components/mints/MintCard";
@@ -26,7 +27,7 @@ export default function Mints() {
 
   useEffect(() => {
     dispatch(getMints(user.currentMetaMaskId));
-  }, []);
+  }, [user.currentMetaMaskId]);
 
   return (
     <div className="home-wrapper py-2">

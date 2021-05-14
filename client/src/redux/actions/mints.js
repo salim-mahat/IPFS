@@ -32,6 +32,7 @@ export const getMints = (address) => (dispatch) => {
         type: SET_MINTS,
         payload: res.data.message,
       });
+      console.log(res.message);
     }
   });
 };

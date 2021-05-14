@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import CloseIcon from "@material-ui/icons/Close";
 import {
   Button,
   Divider,
@@ -8,6 +9,7 @@ import {
   Typography,
   Dialog,
   Input,
+  Box,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import axios from "axios";
@@ -27,7 +29,7 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
   const [token, setToken] = useState("");
   const [state, setstate] = useState({
     name: "",
-    externalURL: "",
+    externalURL: "URL",
     description: "",
     attrName: "",
     attrValue: "",
@@ -135,13 +137,17 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
 
   async function createMintToken(jsonData) {
     const token = Date.now();
-    const account = await getCurrentAccount();
-    const uri = jsonToURI(jsonData);
-    console.log(uri);
-    const coolNumber = await window.contract.methods
-      .mintToken(user.currentMetaMaskId, token, uri)
-      .send({ from: account });
-    return token;
+    try {
+      const account = await getCurrentAccount();
+      const uri = jsonToURI(jsonData);
+      console.log(uri);
+      const coolNumber = await window.contract.methods
+        .mintToken(user.currentMetaMaskId, token, uri)
+        .send({ from: account });
+      return token;
+    } catch (error) {
+      console.log("error occoured", error);
+    }
   }
 
   async function getCurrentAccount() {
@@ -160,12 +166,24 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
       >
-        {blockloader && <BlockLoader />}
+        {blockloader && <BlockLoader proccessName="Minting Asset" />}
 
         <Paper>
-          <Typography variant="h5" className="px-2 py-1">
-            Mint Asset
-          </Typography>
+          <div style={{ width: "100%" }}>
+            <Box display="flex">
+              <Box flexGrow={1}>
+                <Typography variant="h5" className="px-2 py-1">
+                  Mint Asset
+                  {/* <center><Home/></center> */}
+                </Typography>
+              </Box>
+
+              <CloseIcon
+                style={{ padding: "10px" }}
+                onClick={() => setModalOpen(false)}
+              />
+            </Box>
+          </div>
           <Divider />
           <div className="flex-center p-2">
             <div className="flex flex-col flex-1">
@@ -187,7 +205,7 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
                 onChange={onTextFieldChange}
                 value={state.description}
               />
-              <TextField
+              {/* <TextField
                 className="mb-1"
                 label="External URL"
                 placeholder="External URL"
@@ -195,7 +213,7 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
                 variant="outlined"
                 onChange={onTextFieldChange}
                 value={state.externalURL}
-              />
+              /> */}
               <Input
                 className="mb-1"
                 label="Image"

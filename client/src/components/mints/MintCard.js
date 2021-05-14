@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import TransferOwnershipModal from "../../components/TransferOwnershipModal";
 import { Link } from "react-router-dom";
-
+import VideoThumbnail from "react-video-thumbnail";
 import { Favorite, ShareOutlined, Home } from "@material-ui/icons";
 const Constants = require("../constant/Constants");
 
@@ -66,6 +66,16 @@ export default function MintCard({ mint }) {
             }}
             title="Asset image"
           />
+          <div style={{ height: "150px" }}>
+            <VideoThumbnail
+              className={classes.media}
+              videoUrl={`${imageBaseUrl}/${mint.IPFSHash}`}
+              thumbnailHandler={(thumbnail) => console.log(thumbnail)}
+              width={400}
+              height={160}
+            />
+          </div>
+
           <CardContent>
             <Typography variant="body2" color="textSecondary" component="p">
               <strong>Name: </strong>

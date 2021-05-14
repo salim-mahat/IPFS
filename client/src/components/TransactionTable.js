@@ -11,34 +11,35 @@ import {
 } from "@material-ui/core";
 
 export default function TransactionTable({ transactions = [] }) {
+  console.log("data", transactions);
   return (
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell align="right">From</TableCell>
-            <TableCell align="right">To</TableCell>
-            <TableCell align="right">Date/Time</TableCell>
-            <TableCell align="right">Action</TableCell>
+            <TableCell align="center">Token ID</TableCell>
+            <TableCell align="center">From</TableCell>
+            <TableCell align="center">To</TableCell>
+            <TableCell align="center">Date/Time</TableCell>
+            {/* <TableCell align="right">Action</TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
           {transactions.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow key={row._id}>
               <TableCell component="th" scope="row">
-                {row.id}
+                {row.TokenID}
               </TableCell>
               <TableCell align="right" style={{ color: "gray" }}>
-                {row.from}
+                {row.address}
               </TableCell>
               <TableCell align="right" style={{ color: "gray" }}>
-                {row.to}
+                {row.ownershipTransferedTo}
               </TableCell>
-              <TableCell align="right">{row.timestamp}</TableCell>
-              <TableCell align="right">
+              <TableCell align="right">{row.createdAt}</TableCell>
+              {/* <TableCell align="right">
                 <Button>View</Button>
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           ))}
         </TableBody>

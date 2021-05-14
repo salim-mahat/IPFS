@@ -6,9 +6,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import BlockLoader from "./Blockchain/blockloader";
 import axios from "axios";
+import { getMints } from "../redux/actions/mints";
 const Constants = require("./constant/Constants");
 var apiBaseUrl = Constants.getAPiUrl();
 export default function TransferOwnershipModal({
@@ -16,6 +17,7 @@ export default function TransferOwnershipModal({
   setModalOpen,
   token,
 }) {
+  const dispatch = useDispatch();
   const [toAddress, setToAddress] = useState("");
   const [blockloader, setblockloader] = React.useState(false);
   const subscribeLogEvent = (contract, eventName) => {
@@ -54,26 +56,36 @@ export default function TransferOwnershipModal({
 
   async function transferOwnershipWeb3() {
     setblockloader(true);
-    const account = await getCurrentAccount();
-    console.log(user.currentMetaMaskId);
-    console.log(token);
-    console.log(account);
-    const coolNumber = await window.contract.methods
-      .transferFrom(user.currentMetaMaskId, toAddress, token)
-      .send({ from: account });
-    const event = subscribeLogEvent(window.contract, "Transfer");
-    if (event != null) {
-      const transferOwnershipResponse = await axios.post(
-        `${apiBaseUrl}/TransferOwnership`,
-        {
-          From: user.currentMetaMaskId,
-          To: toAddress,
-          TokenID: token,
-        }
-      );
-      console.log(transferOwnershipResponse);
-      setModalOpen(false);
+    try {
+      const account = await getCurrentAccount();
+      console.log(user.currentMetaMaskId);
+      console.log(token);
+      console.log(account);
+      const coolNumber = await window.contract.methods
+        .transferFrom(user.currentMetaMaskId, toAddress, token)
+        .send({ from: account });
+      const event = subscribeLogEvent(window.contract, "Transfer");
+      if (event != null) {
+        const transferOwnershipResponse = await axios.post(
+          `${apiBaseUrl}/TransferOwnership`,
+          {
+            From: user.currentMetaMaskId.toLowerCase(),
+            To: toAddress.toLowerCase(),
+            TokenID: token,
+          }
+        );
+        console.log(transferOwnershipResponse);
+        dispatch(getMints(user.currentMetaMaskId));
+        setModalOpen(false);
+        setblockloader(false);
+      }
+    } catch (error) {
       setblockloader(false);
+      setModalOpen(false);
+      setTimeout(() => {
+        alert(error.message);
+      }, 500);
+      console.log("error occured", error);
     }
   }
   async function getCurrentAccount() {
@@ -92,7 +104,7 @@ export default function TransferOwnershipModal({
         onClose={() => setModalOpen(false)}
         aria-labelledby="form-dialog-title"
       >
-        {blockloader && <BlockLoader />}
+        {blockloader && <BlockLoader proccessName="Transfering Asset" />}
         <DialogTitle id="form-dialog-title">Transfer Asset</DialogTitle>
         <DialogContent>
           <DialogContentText>

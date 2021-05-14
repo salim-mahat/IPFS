@@ -9,15 +9,24 @@ import TransferOwnershipModal from "../../components/TransferOwnershipModal";
 import TransactionTable from "../../components/TransactionTable";
 import { transactions } from "../../dummyData";
 import Web3 from "web3";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { getMints } from "../../redux/actions/mints";
 
 export default function Home() {
+  const user = useSelector((s) => s.userData.user);
+  const mints = useSelector((s) => Object.values(s.mintData.mints));
   const [ownershipModalOpen, setOwnershipModalOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [transferHistory, setTransferHistory] = useState([]);
   const history = useHistory();
+  const dispatch = useDispatch();
   useEffect(() => {
     // Update the document title using the browser API
     load();
-  }, []);
+    dispatch(getMints(user.currentMetaMaskId));
+    fetchTransactionHistory();
+  }, [user.currentMetaMaskId]);
 
   const onCardClick = () => {
     history.push("/mints");
@@ -370,6 +379,16 @@ export default function Home() {
     );
   }
 
+  async function fetchTransactionHistory() {
+    let response = await axios.get(
+      `/GetOwnershipTransferedHistory/${user.currentMetaMaskId}`
+    );
+    if (response) {
+      setTransferHistory(response.data.message ?? []);
+      console.log("TH", transferHistory);
+    }
+  }
+
   function updateStatus(status) {
     const statusEl = document.getElementById("status");
     //statusEl.innerHTML = status;
@@ -400,7 +419,7 @@ export default function Home() {
               title="Mint"
               buttonText="Mint Asset"
               helperText="Total mint count"
-              count="1043"
+              count={mints.length}
             />
           </DashboardCard>
           <DashboardCard>
@@ -408,7 +427,7 @@ export default function Home() {
               title="Transfers"
               buttonText="Create transfer"
               helperText="Total Transfer till data"
-              count="203"
+              count={transferHistory.length}
             />
           </DashboardCard>
           <DashboardCard>
@@ -426,7 +445,7 @@ export default function Home() {
               Transfers
             </Typography>
             <Divider />
-            <TransactionTable transactions={transactions} />
+            <TransactionTable transactions={transferHistory ?? []} />
           </Paper>
         </div>
         <CreateMintModal modalOpen={modalOpen} setModalOpen={setModalOpen} />

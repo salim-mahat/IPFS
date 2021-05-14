@@ -21,7 +21,7 @@ export default function Navigation() {
             style={{ borderColor: "#aaa" }}
             onClick={() => setopen(true)}
           >
-            <img src="/metamask.png" alt="metamask" />
+            <img src="/wallet.png" alt="metamask" />
           </Button>
           <MetamaskDialog handleClose={handleClose} open={open} />
           <MetamaskDialog />

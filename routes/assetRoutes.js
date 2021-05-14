@@ -13,7 +13,8 @@ const {
     getURIstring,
     GetAssetsByaddress,
     updateAddressandTokenID,
-    TransferOwnership
+    TransferOwnership,
+    OwnershipTransferedHistory
     } = require("../controller/assetController");
 
 
@@ -36,6 +37,11 @@ router.get("/GetAssetByWalletAddress/:address", auth, GetAssetsByaddress);
 
 // update address and tokenid
 router.post("/TransferOwnership", auth, TransferOwnership);
+
+// get ownership transfered data
+router.get("/GetOwnershipTransferedHistory/:address", auth, OwnershipTransferedHistory);
+
+
 
 
 

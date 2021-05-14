@@ -2,8 +2,6 @@
 // const Asset = require('../models/asset');
 
 
-
-
 // //function
 // module.exports = {
 
@@ -87,7 +85,7 @@
 //        //given data
 //     const { _id, address, TokenID } = req.body;
  
-//     //user data
+//     //asset data
 //     const data = await Asset.findOne({ _id });
 
 //     if(!data){
@@ -108,19 +106,65 @@
 // },
 
 
+// // transfer ownership
+// TransferOwnership: async(req, res, next) => {
+//   try{
+//     const {  From, To, TokenID } = req.body;
+//     //asset from data
+//     const fromAssetData = await Asset.findOne({ TokenID:TokenID  });
 
+//     if(!fromAssetData){
+//       return res.status(404).json({status:404, error:"No Asset Data found"});
+//     }
+
+//     // // update dta in from sender
+//     // fromAssetData.address = "";
+//     // fromAssetData.IPFSHash = "";
+//     // fromAssetData.downershipTransferedTo = To
+
+//     // create new asset data from transfered ownership
+//     const newAsset = await new Asset({
+//       // UserId,
+//       name: fromAssetData.name,
+//       description: fromAssetData.description,
+//       externalURL: fromAssetData.externalURL,
+//       attributes: fromAssetData.attributes,
+//       address: To, 
+//       TokenID: TokenID,
+//       IPFSHash: fromAssetData.IPFSHash
+//     });
+
+//     //save to database 
+//     await newAsset.save();  
+
+//     // update dta in from sender
+//     fromAssetData.address = "";
+//     fromAssetData.IPFSHash = "";
+//     fromAssetData.TokenID = "";
+//     // fromAssetData.ownershipTransferedTo = To
+//     await fromAssetData.save();  
+
+//     //success message
+//     res.status(200).json({status:200, message: "Ownership Transfered Successfully" });
+
+//   } catch (err){
+//     console.log("Error in transfer ownership", err.error);
+//     return res
+//       .status(400)
+//       .json({ status:400, error: `Error in transfer ownership ${err.error}` });
+
+//   }
+
+// }
 
 // }
 
 
 
-
-
-
 // Models
 const Asset = require('../models/asset');
-
-
+ 
+const AssetHistory = require('../models/aasetHistory');
 
 
 //function
@@ -238,13 +282,27 @@ TransferOwnership: async(req, res, next) => {
       return res.status(404).json({status:404, error:"No Asset Data found"});
     }
 
-    // // update dta in from sender
-    // fromAssetData.address = "";
-    // fromAssetData.IPFSHash = "";
-    // fromAssetData.downershipTransferedTo = To
+    
+    // save history to assetHistory
 
     // create new asset data from transfered ownership
-    const newAsset = await new Asset({
+    const newAssetHistory = await new AssetHistory({
+      UserId: req.user.id,
+      name: fromAssetData.name,
+      description: fromAssetData.description,
+      externalURL: fromAssetData.externalURL,
+      attributes: fromAssetData.attributes,
+      address: fromAssetData.address, 
+      TokenID: fromAssetData.TokenID,
+      IPFSHash: fromAssetData.IPFSHash,
+      ownershipTransferedTo: To
+    });
+
+    // //save to owenership transfer history database 
+    // await newAssetHistory.save();  
+
+     // create new asset data from transfered ownership
+     const newAsset = await new Asset({
       // UserId,
       name: fromAssetData.name,
       description: fromAssetData.description,
@@ -255,14 +313,20 @@ TransferOwnership: async(req, res, next) => {
       IPFSHash: fromAssetData.IPFSHash
     });
 
-    //save to database 
-    await newAsset.save();  
+    //save trnsfered data asset to database 
+    await newAsset.save();
+
+    //save to owenership transfer history asset history database 
+    await newAssetHistory.save();  
+
+    
 
     // update dta in from sender
     fromAssetData.address = "";
     fromAssetData.IPFSHash = "";
     fromAssetData.TokenID = "";
     // fromAssetData.ownershipTransferedTo = To
+    // save data to asset database
     await fromAssetData.save();  
 
     //success message
@@ -276,6 +340,36 @@ TransferOwnership: async(req, res, next) => {
 
   }
 
-}
+},
+
+
+
+// get OwnershipTransferedHistory
+OwnershipTransferedHistory: async (req, res, next) => {
+  try {
+    // // logged in user
+    // const { id } = req.user
+    // given data
+    const { address } = req.params
+    // find given address 
+    const ownershipData = await AssetHistory.find({ address })
+    // if addresses not found
+    if (!ownershipData) {
+      return res.status(404).json({ status: 404, message: "Ownership Transfered Data Not Found" });
+    }
+
+    //success message
+    res.status(200).json({ status: 200, message: ownershipData })
+
+  } catch (err) {
+    console.log("Error in getting ownership transfered data");
+    return res
+      .status(400)
+      .json({ status: 400, error: `Error in getting ownership transfered data ${err.error}` })
+
+  }
+},
+
+
 
 }

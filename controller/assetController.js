@@ -288,13 +288,13 @@ TransferOwnership: async(req, res, next) => {
     // create new asset data from transfered ownership
     const newAssetHistory = await new AssetHistory({
       UserId: req.user.id,
-      name: fromAssetData.name,
-      description: fromAssetData.description,
-      externalURL: fromAssetData.externalURL,
-      attributes: fromAssetData.attributes,
+      // name: fromAssetData.name,
+      // description: fromAssetData.description,
+      // externalURL: fromAssetData.externalURL,
+      // attributes: fromAssetData.attributes,
       address: fromAssetData.address, 
       TokenID: fromAssetData.TokenID,
-      IPFSHash: fromAssetData.IPFSHash,
+      // IPFSHash: fromAssetData.IPFSHash,
       ownershipTransferedTo: To
     });
 

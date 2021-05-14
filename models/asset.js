@@ -86,6 +86,6 @@ const assetSchema = mongoose.Schema({
   ownershipTransferedTo: {
     type: String,
   },
-});
+},{ timestamps: true });
 
 module.exports = mongoose.model("Asset", assetSchema);

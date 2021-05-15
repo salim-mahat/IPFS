@@ -99,6 +99,7 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
         console.log(updateAddressRes);
       }
     }
+    window.location = "/";
     setModalOpen(false);
     setblockloader(false);
   };

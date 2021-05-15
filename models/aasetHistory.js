@@ -16,7 +16,7 @@ const assetHistorySchema = mongoose.Schema({
   TokenID: {
     type: String,
   },
-  address: {
+  address: { 
     type: String,
   },
   // IPFSHash: {

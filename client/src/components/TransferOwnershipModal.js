@@ -75,7 +75,8 @@ export default function TransferOwnershipModal({
           }
         );
         console.log(transferOwnershipResponse);
-        dispatch(getMints(user.currentMetaMaskId));
+        //dispatch(getMints(user.currentMetaMaskId));
+        window.location = "/mints";
         setModalOpen(false);
         setblockloader(false);
       }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Divider, Paper, Typography } from "@material-ui/core";
+import { Container, Divider, Paper, Typography, Box } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import DashboardCard from "../../components/dashboard/DashboardCard";
 import DashboardNumbers from "../../components/dashboard/DashboardNumbers";
@@ -28,8 +28,14 @@ export default function Home() {
     fetchTransactionHistory();
   }, [user.currentMetaMaskId]);
 
-  const onCardClick = () => {
-    history.push("/mints");
+  const onCardClick = (assetType, title) => {
+    history.push({
+      pathname: "/mints",
+      state: {
+        assetType: assetType,
+        title: title,
+      },
+    });
   };
 
   async function loadContract() {
@@ -414,20 +420,32 @@ export default function Home() {
     <div className="home-wrapper py-2">
       <Container maxWidth="lg">
         <div className="card-wrapper mb-2">
-          <DashboardCard onCardClick={onCardClick}>
+          <DashboardCard
+            onCardClick={() => onCardClick("Mint", "Minted Assets")}
+          >
             <DashboardNumbers
               title="Mint"
               buttonText="Mint Asset"
               helperText="Total mint count"
-              count={mints.length}
+              count={
+                mints.filter((mint) => {
+                  return mint.assetType === "Mint";
+                }).length
+              }
             />
           </DashboardCard>
-          <DashboardCard>
+          <DashboardCard
+            onCardClick={() => onCardClick("Received", "Purchased Assets")}
+          >
             <DashboardNumbers
-              title="Transfers"
+              title="Purchased"
               buttonText="Create transfer"
               helperText="Total Transfer till data"
-              count={transferHistory.length}
+              count={
+                mints.filter((mint) => {
+                  return mint.assetType === "Received";
+                }).length
+              }
             />
           </DashboardCard>
           <DashboardCard>
@@ -441,9 +459,20 @@ export default function Home() {
         </div>
         <div className="transactions-section pb-2">
           <Paper>
-            <Typography variant="h5" className="px-2 py-1">
-              Transfers
-            </Typography>
+            <div style={{ width: "100%" }}>
+              <Box display="flex">
+                <Box flexGrow={1}>
+                  <Typography variant="h5" className="px-2 py-1">
+                    Transfers
+                    {/* <center><Home/></center> */}
+                  </Typography>
+                </Box>
+
+                <Typography variant="subtitle1" className="px-2 py-1">
+                  Count : {transferHistory.length}
+                </Typography>
+              </Box>
+            </div>
             <Divider />
             <TransactionTable transactions={transferHistory ?? []} />
           </Paper>

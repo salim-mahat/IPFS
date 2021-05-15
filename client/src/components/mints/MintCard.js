@@ -57,49 +57,49 @@ export default function MintCard({ mint }) {
   return (
     <div>
       <Card className={clsx(classes.root, "m-2")}>
-        <Link to={`/mints/${mint.id}`}>
-          <CardMedia
+        {/* <Link to={`/mints/${mint.id}`}> */}
+        <CardMedia
+          className={classes.media}
+          image={`${imageBaseUrl}/${mint.IPFSHash}`}
+          onClick={() => {
+            imageurlfunction(mint.IPFSHash);
+          }}
+          title="Asset image"
+        />
+        <div style={{ height: "150px" }}>
+          <VideoThumbnail
             className={classes.media}
-            image={`${imageBaseUrl}/${mint.IPFSHash}`}
-            onClick={() => {
-              imageurlfunction(mint.IPFSHash);
-            }}
-            title="Asset image"
+            videoUrl={`${imageBaseUrl}/${mint.IPFSHash}`}
+            thumbnailHandler={(thumbnail) => console.log(thumbnail)}
+            width={400}
+            height={160}
           />
-          <div style={{ height: "150px" }}>
-            <VideoThumbnail
-              className={classes.media}
-              videoUrl={`${imageBaseUrl}/${mint.IPFSHash}`}
-              thumbnailHandler={(thumbnail) => console.log(thumbnail)}
-              width={400}
-              height={160}
-            />
-          </div>
+        </div>
 
-          <CardContent>
-            <Typography variant="body2" color="textSecondary" component="p">
-              <strong>Name: </strong>
-              {mint.name}
-            </Typography>
+        <CardContent>
+          <Typography variant="body2" color="textSecondary" component="p">
+            <strong>Name: </strong>
+            {mint.name}
+          </Typography>
 
-            <Typography variant="body2" color="textSecondary" component="p">
-              <strong>Description: </strong>
-              {mint.description}
-            </Typography>
-          </CardContent>
-          <CardActions disableSpacing>
-            <Button
-              variant="contained"
-              onClick={() => {
-                setOwnershipModalOpen(true);
-              }}
-              size="small"
-              color="secondary"
-            >
-              Transfer
-            </Button>
-          </CardActions>
-        </Link>
+          <Typography variant="body2" color="textSecondary" component="p">
+            <strong>Description: </strong>
+            {mint.description}
+          </Typography>
+        </CardContent>
+        <CardActions disableSpacing>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOwnershipModalOpen(true);
+            }}
+            size="small"
+            color="secondary"
+          >
+            Transfer
+          </Button>
+        </CardActions>
+        {/* </Link> */}
       </Card>
       <TransferOwnershipModal
         modalOpen={ownershipModalOpen}

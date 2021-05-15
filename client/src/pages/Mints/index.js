@@ -7,6 +7,7 @@ import {
   Typography,
   Box,
 } from "@material-ui/core";
+import { useLocation } from "react-router";
 import VideoThumbnail from "react-video-thumbnail";
 import { useDispatch, useSelector } from "react-redux";
 import { Favorite, ShareOutlined, Home } from "@material-ui/icons";
@@ -19,7 +20,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Mints() {
+export default function Mints({ assetType }) {
+  const location = useLocation();
   const classes = useStyles();
   const user = useSelector((s) => s.userData.user);
   const mints = useSelector((s) => Object.values(s.mintData.mints));
@@ -38,7 +40,7 @@ export default function Mints() {
               <Box display="flex">
                 <Box flexGrow={1}>
                   <Typography variant="h5" className="px-2 py-1">
-                    MINTED ASSET
+                    {location.state.title}
                     {/* <center><Home/></center> */}
                   </Typography>
                 </Box>
@@ -53,13 +55,14 @@ export default function Mints() {
 
             <Divider />
             <div className="flex flex-wrap">
-              {mints.map((mint, index) => (
-                <>
+              {mints
+                .filter((mint) => {
+                  console.log(location.state.assetType);
+                  return mint.assetType === location.state.assetType;
+                })
+                .map((mint, index) => (
                   <MintCard key={mint.id} mint={mint} />
-                  {/* <br/>
-                <Divider/> */}
-                </>
-              ))}
+                ))}
             </div>
           </div>
         </Paper>

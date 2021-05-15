@@ -1,5 +1,5 @@
+// var apiBaseUrl = "http://localhost:3000";
 var apiBaseUrl = "https://ipfsnft.herokuapp.com";
-//var apiBaseUrl = "https://ipfsnft.herokuapp.com";
 
 export function getAPiUrl() {
   return apiBaseUrl;

@@ -28,6 +28,11 @@ const assetHistorySchema = mongoose.Schema({
   ownershipTransferedTo: {
     type: String,
   },
+  assetType: {
+    type: String,
+    enum: ["Transfer"],
+    default: "Transfer"
+  },
 },{ timestamps: true }
 );
 

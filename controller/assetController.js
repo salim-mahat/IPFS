@@ -301,6 +301,8 @@ TransferOwnership: async(req, res, next) => {
     // //save to owenership transfer history database 
     // await newAssetHistory.save();  
 
+     const assetType = "Received"
+
      // create new asset data from transfered ownership
      const newAsset = await new Asset({
       // UserId,
@@ -310,7 +312,8 @@ TransferOwnership: async(req, res, next) => {
       attributes: fromAssetData.attributes,
       address: To, 
       TokenID: TokenID,
-      IPFSHash: fromAssetData.IPFSHash
+      IPFSHash: fromAssetData.IPFSHash,
+      assetType: assetType
     });
 
     //save trnsfered data asset to database 

@@ -340,6 +340,9 @@ router.post("/", upload_file, (req, res, next) => {
   assetData.UserId = req.user.id;
   assetData.IPFSHash = fields.hash;
 
+  // asset type
+  assetData.assetType = "Mint"
+
   Asset.create(assetData)
     .then((doc) => {
       if (!doc) {

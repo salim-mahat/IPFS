@@ -86,6 +86,11 @@ const assetSchema = mongoose.Schema({
   ownershipTransferedTo: {
     type: String,
   },
+  assetType: {
+    type: String,
+    enum: ["Mint", "Received"],
+    // default: "Mint"
+  },
 },{ timestamps: true });
 
 module.exports = mongoose.model("Asset", assetSchema);

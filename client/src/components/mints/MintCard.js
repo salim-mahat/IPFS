@@ -104,7 +104,7 @@ export default function MintCard({ mint }) {
       <TransferOwnershipModal
         modalOpen={ownershipModalOpen}
         setModalOpen={setOwnershipModalOpen}
-        token={mint.TokenID}
+        token={mint.tokenID}
       />
     </div>
   );

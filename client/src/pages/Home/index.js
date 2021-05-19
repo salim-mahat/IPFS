@@ -12,6 +12,8 @@ import Web3 from "web3";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { getMints } from "../../redux/actions/mints";
+const Constants = require("../../components/constant/Constants");
+var apiBaseUrl = Constants.getAPiUrl();
 
 export default function Home() {
   const user = useSelector((s) => s.userData.user);
@@ -19,13 +21,16 @@ export default function Home() {
   const [ownershipModalOpen, setOwnershipModalOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [transferHistory, setTransferHistory] = useState([]);
+  const [pendingTransactions, setPendingTransactions] = useState({});
   const history = useHistory();
   const dispatch = useDispatch();
   useEffect(() => {
     // Update the document title using the browser API
     load();
     dispatch(getMints(user.currentMetaMaskId));
+    //getTokens();
     fetchTransactionHistory();
+    checkUnfinishedTransactions();
   }, [user.currentMetaMaskId]);
 
   const onCardClick = (assetType, title) => {
@@ -387,7 +392,7 @@ export default function Home() {
 
   async function fetchTransactionHistory() {
     let response = await axios.get(
-      `/GetOwnershipTransferedHistory/${user.currentMetaMaskId}`
+      `api/assets/GetOwnershipTransferedHistory/${user.currentMetaMaskId}`
     );
     if (response) {
       setTransferHistory(response.data.message ?? []);
@@ -395,6 +400,14 @@ export default function Home() {
     }
   }
 
+  const showPendingTransactions = () => {
+    let transactionHashes = [];
+    pendingTransactions.forEach((element) => {
+      transactionHashes.push(element.transaction_hash);
+    });
+    console.log(transactionHashes);
+    alert(transactionHashes);
+  };
   function updateStatus(status) {
     const statusEl = document.getElementById("status");
     //statusEl.innerHTML = status;
@@ -414,6 +427,69 @@ export default function Home() {
       window.web3 = new Web3(window.ethereum);
       window.ethereum.enable();
     }
+  }
+  async function getCurrentAccount() {
+    const accounts = await window.web3.eth.getAccounts();
+    //  alert(accounts[0]);
+    return accounts[0];
+  }
+
+  async function checkUnfinishedTransactions() {
+    const response = await axios.get(
+      `${apiBaseUrl}/api/assets/GetPendingAsset/${user.currentMetaMaskId}`
+    );
+    const backedUpData = response.data.message;
+    setPendingTransactions(backedUpData);
+    console.log(backedUpData);
+    if (backedUpData) {
+      for (const index in backedUpData) {
+        console.log(index);
+        console.log("transaction hash", backedUpData[index].transactionHash);
+        if (backedUpData[index].address === user.currentMetaMaskId) {
+          let status = await window.web3.eth.getTransactionReceipt(
+            backedUpData[index].transaction_hash
+          );
+          console.log("status", status);
+          if (status) {
+            const uriObject = await getTokenURI(backedUpData[index].tokenID);
+            console.log(uriObject);
+            if (backedUpData[index].assetType == "Mint") {
+              const res = await axios.post(
+                `${apiBaseUrl}/api/assets/MintAsset`,
+                {
+                  ...uriObject,
+                  address: user.currentMetaMaskId,
+                  tokenID: backedUpData[index].tokenID,
+                }
+              );
+            } else {
+              const transferOwnershipResponse = await axios.post(
+                `${apiBaseUrl}/api/assets/TransferOwnership`,
+                {
+                  From: user.currentMetaMaskId.toLowerCase(),
+                  To: backedUpData[index].ToAddress,
+                  TokenID: backedUpData[index].tokenID,
+                }
+              );
+            }
+            backedUpData.shift();
+          } else {
+            console.log("Process is still pending");
+          }
+        }
+      }
+    }
+  }
+  async function getTokens() {
+    const account = await getCurrentAccount();
+    const tokenCount = await window.contract.methods
+      .balanceOf(user.currentMetaMaskId)
+      .call();
+    console.log("tokenCOunt", tokenCount);
+  }
+  async function getTokenURI(token) {
+    const tokenURI = await window.contract.methods.tokenURI(token).call();
+    return JSON.parse(decodeURIComponent(tokenURI));
   }
 
   return (
@@ -453,7 +529,8 @@ export default function Home() {
               onButtonClick={() => {
                 setModalOpen(true);
               }}
-              onTransferOwnership={onCardClick}
+              onTransferOwnership={() => onCardClick("Mint", "Minted Assets")}
+              showPendingTransactions={() => showPendingTransactions()}
             />
           </DashboardCard>
         </div>

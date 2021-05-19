@@ -26,7 +26,7 @@ export const createMint = (mintData) => (dispatch) => {
 
 export const getMints = (address) => (dispatch) => {
   console.log("address", address);
-  axios.get(`/GetAssetByWalletAddress/${address}`).then((res) => {
+  axios.get(`/api/assets/GetAssetByWalletAddress/${address}`).then((res) => {
     if (res.data) {
       dispatch({
         type: SET_MINTS,

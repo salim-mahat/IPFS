@@ -55,7 +55,7 @@ export default function TransferOwnershipModal({
   const user = useSelector((s) => s.userData.user);
 
   async function transferOwnershipWeb3() {
-    setblockloader(true);
+    //setblockloader(true);
     try {
       const account = await getCurrentAccount();
       console.log(user.currentMetaMaskId);
@@ -63,11 +63,24 @@ export default function TransferOwnershipModal({
       console.log(account);
       const coolNumber = await window.contract.methods
         .transferFrom(user.currentMetaMaskId, toAddress, token)
-        .send({ from: account });
+        .send({ from: account })
+        .on("transactionHash", function (hash) {
+          axios
+            .post(`${apiBaseUrl}/api/assets/PendingMintAsset`, {
+              tokenID: token,
+              address: user.currentMetaMaskId,
+              transaction_hash: hash,
+              assetType: "Transfer",
+              ToAddress: toAddress.toLowerCase(),
+            })
+            .then((res) => {
+              console.log("save pending transaction", res.data);
+            });
+        });
       const event = subscribeLogEvent(window.contract, "Transfer");
       if (event != null) {
         const transferOwnershipResponse = await axios.post(
-          `${apiBaseUrl}/TransferOwnership`,
+          `${apiBaseUrl}/api/assets/TransferOwnership`,
           {
             From: user.currentMetaMaskId.toLowerCase(),
             To: toAddress.toLowerCase(),
@@ -78,7 +91,7 @@ export default function TransferOwnershipModal({
         //dispatch(getMints(user.currentMetaMaskId));
         window.location = "/";
         setModalOpen(false);
-        setblockloader(false);
+        //setblockloader(false);
       }
     } catch (error) {
       setblockloader(false);

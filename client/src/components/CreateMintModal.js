@@ -26,6 +26,7 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
     // Update the document title using the browser API
     console.log(user.currentMetaMaskId);
   }, []);
+  const [asset, setAsset] = useState(null);
   const [token, setToken] = useState("");
   const [state, setstate] = useState({
     name: "",
@@ -34,7 +35,8 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
     attrName: "",
     attrValue: "",
     attributes: [],
-    file: null,
+    IPFSHash: "",
+    address: "",
   });
   const [blockloader, setblockloader] = React.useState(false);
   const dispatch = useDispatch();
@@ -44,7 +46,7 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
   };
 
   const onFileChange = ({ target }) => {
-    setstate({ ...state, file: target.files[0] });
+    setAsset(target.files[0]);
   };
 
   function jsonToURI(json) {
@@ -64,44 +66,50 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
   };
 
   const createNewMint = async () => {
-    setblockloader(true);
+    //setblockloader(true);
     const mintData = { ...state };
     delete mintData.attrName;
     delete mintData.attrValue;
     // dispatch(createMint(mintData));
-    const formData = new FormData();
-    for (const key in mintData) {
-      formData.append(key, mintData[key]);
-    }
-    console.log(state);
+    const assetFormData = new FormData();
+    assetFormData.append("file", asset);
 
-    const res = await axios.post(`${apiBaseUrl}/api/asset/`, formData, {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    });
-
+    const res = await axios.post(
+      `${apiBaseUrl}/api/ipfs/UploadFiles`,
+      assetFormData,
+      {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      }
+    );
+    console.log(res.data.data.hash);
     if (res.data.status === "success") {
-      var token = await createMintToken(res.data.mint);
-      setToken(token);
-      const eventResult = subscribeLogEvent(window.contract, "Transfer");
-      console.log("eventResult", eventResult);
-      if (eventResult != null) {
-        console.log(res.data.mint._id);
-        const updateAddressRes = await axios.post(
-          `${apiBaseUrl}/updateAddressAndTokenID/`,
-          {
-            _id: res.data.mint._id,
-            address: user.currentMetaMaskId,
-            TokenID: token,
-          }
-        );
-        console.log(updateAddressRes);
+      var token = await createMintToken({
+        ...state,
+        IPFSHash: res.data.data.hash,
+      });
+      if (token) {
+        setToken(token);
+        const eventResult = subscribeLogEvent(window.contract, "Transfer");
+        console.log("eventResult", eventResult);
+        if (eventResult) {
+          const updateAddressRes = await axios.post(
+            `${apiBaseUrl}/api/assets/MintAsset`,
+            {
+              ...state,
+              IPFSHash: res.data.data.hash,
+              address: user.currentMetaMaskId,
+              tokenID: token,
+            }
+          );
+        }
+      } else {
+        alert("Something went wrong");
       }
     }
-    window.location = "/";
     setModalOpen(false);
-    setblockloader(false);
+    //setblockloader(false);
   };
 
   const subscribeLogEvent = (contract, eventName) => {
@@ -141,13 +149,27 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
     try {
       const account = await getCurrentAccount();
       const uri = jsonToURI(jsonData);
+      console.log(jsonData);
       console.log(uri);
       const coolNumber = await window.contract.methods
         .mintToken(user.currentMetaMaskId, token, uri)
-        .send({ from: account });
+        .send({ from: account })
+        .on("transactionHash", function (hash) {
+          axios
+            .post(`${apiBaseUrl}/api/assets/PendingMintAsset`, {
+              tokenID: token,
+              address: user.currentMetaMaskId,
+              transaction_hash: hash,
+              assetType: "Mint",
+            })
+            .then((res) => {
+              console.log("save pending transaction", res.data);
+            });
+        });
       return token;
     } catch (error) {
       console.log("error occoured", error);
+      return null;
     }
   }
 

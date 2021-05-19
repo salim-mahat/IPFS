@@ -4,6 +4,7 @@ import { Button, CardContent, Typography } from "@material-ui/core";
 export default function DashboardActions({
   onButtonClick,
   onTransferOwnership,
+  showPendingTransactions,
 }) {
   return (
     <CardContent>
@@ -19,16 +20,23 @@ export default function DashboardActions({
         <Button
           onClick={onButtonClick}
           name="mint"
-          className="my-1 p-3 box-btn"
+          className="my-1 p-2 box-btn"
         >
           Mint Asset
         </Button>
         <Button
-          className="my-1 p-3 box-btn"
+          className="my-1 p-2 box-btn"
           onClick={onTransferOwnership}
           name="transaction"
         >
           Transfer Ownership
+        </Button>
+        <Button
+          className="my-1 p-2 box-btn"
+          onClick={showPendingTransactions}
+          name="transaction"
+        >
+          Pending Transactions
         </Button>
       </div>
     </CardContent>

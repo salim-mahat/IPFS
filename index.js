@@ -19,6 +19,13 @@ app.use(
 );
 app.use(corsMiddleware);
 
+//my routes
+const assetRoutes = require("./routes/assetRoutes");
+const ipfsRoutes = require("./routes/ipfsRoutes");
+
+
+
+
 app.use("/", express.static(path.join("client", "build")));
 
 app.use("/api", require("./routes"));
@@ -26,9 +33,15 @@ app.use("/api", require("./routes"));
 
 
 
-// my code
 
-app.use('/',require('./routes/assetRoutes'))
+
+
+
+
+// my code
+// app.use('/',require('./routes/assetRoutes'))
+app.use("/api/assets", assetRoutes);
+app.use("/api/ipfs", ipfsRoutes);
 
 
 

@@ -5,7 +5,7 @@ export function getAPiUrl() {
   return apiBaseUrl;
 }
 
-var imageBaseUrl = "http://52.14.165.133:8080/ipfs"; 
+var imageBaseUrl = "http://52.14.165.133:8080/ipfs";
 
 export function getimageUrl() {
   return imageBaseUrl;

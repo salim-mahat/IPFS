@@ -12,6 +12,7 @@ import Web3 from "web3";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { getMints } from "../../redux/actions/mints";
+import PendingTransactionsModal from "../../components/ShowPendingTransactions";
 const Constants = require("../../components/constant/Constants");
 var apiBaseUrl = Constants.getAPiUrl();
 
@@ -19,9 +20,11 @@ export default function Home() {
   const user = useSelector((s) => s.userData.user);
   const mints = useSelector((s) => Object.values(s.mintData.mints));
   const [ownershipModalOpen, setOwnershipModalOpen] = useState(false);
+  const [pendingTransactionModalOpen, setPendingTransactionModalOpen] =
+    useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [transferHistory, setTransferHistory] = useState([]);
-  const [pendingTransactions, setPendingTransactions] = useState({});
+  const [pendingTransactions, setPendingTransactions] = useState([]);
   const history = useHistory();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -439,6 +442,7 @@ export default function Home() {
       `${apiBaseUrl}/api/assets/GetPendingAsset/${user.currentMetaMaskId}`
     );
     const backedUpData = response.data.message;
+    console.log("pending transaction set");
     setPendingTransactions(backedUpData);
     console.log(backedUpData);
     if (backedUpData) {
@@ -530,7 +534,9 @@ export default function Home() {
                 setModalOpen(true);
               }}
               onTransferOwnership={() => onCardClick("Mint", "Minted Assets")}
-              showPendingTransactions={() => showPendingTransactions()}
+              showPendingTransactions={() => {
+                setPendingTransactionModalOpen(true);
+              }}
             />
           </DashboardCard>
         </div>
@@ -558,6 +564,11 @@ export default function Home() {
         <TransferOwnershipModal
           modalOpen={ownershipModalOpen}
           setModalOpen={setOwnershipModalOpen}
+        />
+        <PendingTransactionsModal
+          modalOpen={pendingTransactionModalOpen}
+          setModalOpen={setPendingTransactionModalOpen}
+          pendingTransactions={pendingTransactions}
         />
       </Container>
     </div>

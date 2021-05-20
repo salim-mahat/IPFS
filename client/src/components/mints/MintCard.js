@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import clsx from "classnames";
+import axios from "axios";
 import {
   Card,
   CardMedia,
@@ -14,7 +15,7 @@ import {
 import TransferOwnershipModal from "../../components/TransferOwnershipModal";
 import { Link } from "react-router-dom";
 import VideoThumbnail from "react-video-thumbnail";
-import { Favorite, ShareOutlined, Home } from "@material-ui/icons";
+import fileDownload from "js-file-download";
 const Constants = require("../constant/Constants");
 
 var apiBaseUrl = Constants.getAPiUrl();
@@ -49,9 +50,14 @@ const useStyles = makeStyles((theme) => ({
 export default function MintCard({ mint }) {
   const classes = useStyles();
   const [ownershipModalOpen, setOwnershipModalOpen] = useState(false);
-  const imageurlfunction = (value) => {
-    console.log(mint);
-    window.open(`${imageBaseUrl}/${value}`);
+  const imageurlfunction = async (value) => {
+    // const response = await ;
+    // console.log("respose", response);
+    axios
+      .get(`${apiBaseUrl}/api/ipfs/downloadFile/${value}`, {
+        responseType: "blob",
+      })
+      .then((response) => fileDownload(response.data, "download.jpeg"));
   };
 
   return (

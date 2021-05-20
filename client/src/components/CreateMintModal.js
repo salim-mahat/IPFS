@@ -10,6 +10,7 @@ import {
   Dialog,
   Input,
   Box,
+  CircularProgress,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import axios from "axios";
@@ -26,7 +27,6 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
     // Update the document title using the browser API
     console.log(user.currentMetaMaskId);
   }, []);
-  const [asset, setAsset] = useState(null);
   const [token, setToken] = useState("");
   const [state, setstate] = useState({
     name: "",
@@ -38,6 +38,8 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
     IPFSHash: "",
     address: "",
   });
+  const [fileResponse, setfileResponse] = useState(null);
+  const [isFileUploading, setIsFileUploading] = useState(false);
   const [blockloader, setblockloader] = React.useState(false);
   const dispatch = useDispatch();
 
@@ -46,7 +48,7 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
   };
 
   const onFileChange = ({ target }) => {
-    setAsset(target.files[0]);
+    uploadFile(target.files[0]);
   };
 
   function jsonToURI(json) {
@@ -65,8 +67,8 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
     });
   };
 
-  const createNewMint = async () => {
-    //setblockloader(true);
+  async function uploadFile(asset) {
+    setIsFileUploading(true);
     const mintData = { ...state };
     delete mintData.attrName;
     delete mintData.attrValue;
@@ -83,11 +85,20 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
         },
       }
     );
-    console.log(res.data.data.hash);
-    if (res.data.status === "success") {
+    if (res.data.status == "success") {
+      setfileResponse(res.data);
+    }
+    setIsFileUploading(false);
+  }
+
+  const createNewMint = async () => {
+    //setblockloader(true);
+    if (fileResponse.status === "success") {
+      console.log(fileResponse.data.hash);
+      setModalOpen(false);
       var token = await createMintToken({
         ...state,
-        IPFSHash: res.data.data.hash,
+        IPFSHash: fileResponse.data.hash,
       });
       if (token) {
         setToken(token);
@@ -98,7 +109,7 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
             `${apiBaseUrl}/api/assets/MintAsset`,
             {
               ...state,
-              IPFSHash: res.data.data.hash,
+              IPFSHash: fileResponse.data.hash,
               address: user.currentMetaMaskId,
               tokenID: token,
             }
@@ -163,7 +174,7 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
               assetType: "Mint",
             })
             .then((res) => {
-              console.log("save pending transaction", res.data);
+              console.log("save pending transaction", fileResponse);
             });
         });
       return token;
@@ -240,7 +251,6 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
               <Input
                 className="mb-1"
                 label="Image"
-                variant="outlined"
                 type="file"
                 name="file"
                 onChange={onFileChange}
@@ -303,9 +313,22 @@ export default function CreateMintModal({ modalOpen, setModalOpen }) {
             </div>
           </div>
           <div className="flex flex-center pb-2">
-            <Button size="large" variant="contained" onClick={createNewMint}>
-              Create
-            </Button>
+            {isFileUploading ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                disabled={
+                  !fileResponse ||
+                  state.title === "" ||
+                  state.description === ""
+                }
+                size="large"
+                variant="contained"
+                onClick={createNewMint}
+              >
+                Create
+              </Button>
+            )}
           </div>
         </Paper>
       </Dialog>

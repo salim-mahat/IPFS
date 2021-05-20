@@ -67,7 +67,8 @@ downloadFile: async (req, res, next) => {
 		// console.log("username " + username);
 		// console.log("hash " + hash);
 
-		res.setHeader("content-disposition", "attachment; filename=ttt.docx");         
+		// res.setHeader("content-disposition", "attachment; filename=ttt.docx");      
+    // res.setHeader("content-disposition", "attachment; filename=ttt.docx");   
 		request("http://52.14.165.133:8080/ipfs/"+hash).pipe(res);
 
     //  request("http://34.72.65.255:8080/ipfs/"+hash).pipe(res);

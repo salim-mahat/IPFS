@@ -1,0 +1,17 @@
+#data {
+  width: 100px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#data:hover {
+  overflow: visible;
+  white-space: normal;
+  width: auto;
+  position: absolute;
+  background-color: #fff;
+}
+#data:hover + div {
+  margin-top: 20px;
+}

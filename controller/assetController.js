@@ -748,7 +748,7 @@ AssetMint: async(req, res, next) => {
       name: name,
       description: description,
       IPFSHash: IPFSHash,
-      attributes: attributes,
+      attributes: attributes, 
       tokenID: tokenID,
       address: address, 
       assetType: assetType

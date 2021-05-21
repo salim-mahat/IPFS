@@ -11,7 +11,7 @@ const pendingAssetSchema = mongoose.Schema({
     unique: true
   },
   address: {
-    type: String,
+    type: String, 
   },
   Toaddress:{
     type: String,

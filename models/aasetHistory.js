@@ -13,7 +13,7 @@ const assetHistorySchema = mongoose.Schema({
   // externalURL: {
   //   type: String,
   // },
-  TokenID: {
+  tokenID: {
     type: String,
   },
   address: { 

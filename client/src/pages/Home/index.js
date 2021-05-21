@@ -200,7 +200,7 @@ export default function Home() {
           inputs: [
             {
               internalType: "address",
-              name: "to",
+              name: "operator",
               type: "address",
             },
             {
@@ -357,6 +357,25 @@ export default function Home() {
           type: "function",
         },
         {
+          inputs: [
+            {
+              internalType: "bytes4",
+              name: "interfaceId",
+              type: "bytes4",
+            },
+          ],
+          name: "supportsInterface",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [],
           name: "symbol",
           outputs: [
@@ -389,7 +408,7 @@ export default function Home() {
           type: "function",
         },
       ],
-      "0x7b201a9c9aa658c5e308b03a423af4057c75d570"
+      "0x35444362c3f329246cCEEFF1a5fFb8699Ab66F4D"
     );
   }
 
@@ -444,7 +463,7 @@ export default function Home() {
     const backedUpData = response.data.message;
     console.log("pending transaction set");
     setPendingTransactions(backedUpData);
-    console.log(backedUpData);
+    console.log("new backup data", backedUpData);
     if (backedUpData) {
       for (const index in backedUpData) {
         console.log(index);
@@ -471,7 +490,7 @@ export default function Home() {
                 `${apiBaseUrl}/api/assets/TransferOwnership`,
                 {
                   From: user.currentMetaMaskId.toLowerCase(),
-                  To: backedUpData[index].ToAddress,
+                  To: backedUpData[index].Toaddress,
                   TokenID: backedUpData[index].tokenID,
                 }
               );

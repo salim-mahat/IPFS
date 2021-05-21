@@ -71,12 +71,13 @@ export default function TransferOwnershipModal({
               address: user.currentMetaMaskId,
               transaction_hash: hash,
               assetType: "Transfer",
-              ToAddress: toAddress.toLowerCase(),
+              Toaddress: toAddress.toLowerCase(),
             })
             .then((res) => {
               console.log("save pending transaction", res.data);
             });
         });
+
       const event = subscribeLogEvent(window.contract, "Transfer");
       if (event != null) {
         const transferOwnershipResponse = await axios.post(

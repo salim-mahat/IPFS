@@ -28,7 +28,7 @@ export default function TransactionTable({ transactions = [] }) {
           {transactions.map((row) => (
             <TableRow key={row._id}>
               <TableCell component="th" scope="row">
-                {row.TokenID}
+                {row.tokenID}
               </TableCell>
               <TableCell align="right" style={{ color: "gray" }}>
                 {row.address}
